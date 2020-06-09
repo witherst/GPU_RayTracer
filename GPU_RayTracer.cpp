@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "vector.h"
+#include "ray.h"
 #include <GL/glut.h>
 
 using std::cout;
@@ -12,34 +13,12 @@ using std::endl;
 using std::ofstream;
 
 #ifndef SIZEX
-#define SIZEX 200
+#define SIZEX 600
 #endif
 
 #ifndef SIZEY
-#define SIZEY 100
+#define SIZEY 300
 #endif
-
-//int main(int argc, char** argv)
-//{
-//    ofstream imgFile;
-//    imgFile.open("test.ppm");
-//
-//    imgFile << "P3\n" << SIZEX << " " << SIZEY << "\n255\n";
-//    for (int j = SIZEY - 1; j >= 0; j--) {
-//        for (int i = 0; i < SIZEX; i++) {
-//            vec3 col(float(i) / float(SIZEX), float(j) / float(SIZEY), 0.2);
-//
-//            int ir = int(255.99 * col[0]);
-//            int ig = int(255.99 * col[1]);
-//            int ib = int(255.99 * col[2]);
-//
-//            imgFile << ir << " " << ig << " " << ib << "\n";
-//        }
-//    }
-//
-//    return 0;
-//
-//}
 
 unsigned char* pixels, * pptr;
 
@@ -59,22 +38,68 @@ int main(int argc, char** argv)
 
     glutDisplayFunc(display);
 
-    pixels = pptr = (unsigned char*)malloc(SIZEX * SIZEY * 3);
-    for (j = SIZEY - 1; j >= 0; j--) {
-        for (i = 0; i < SIZEX; i++) {
-            vec3 col(float(i) / float(SIZEX), float(j) / float(SIZEY), 0.2);
+    pixels = (unsigned char*)malloc(SIZEX * SIZEY * 3);
+    pptr = pixels;
 
+    // Raytracer stuff
+    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    vec3 horizontal(4.0, 0.0, 0.0);
+    vec3 vertical(0.0, 2.0, 0.0);
+    vec3 origin(0.0, 0.0, 0.0);
+
+//    for (j = SIZEY - 1; j >= 0; j--) {    
+    for (j = 0; j < SIZEY; j++) {               // OpenGL flips the Y direction. So need to do it this way for OpenGL display.
+        for (i = 0; i < SIZEX; i++) {
+            float u = float(i) / float(SIZEX);
+            float v = float(j) / float(SIZEY);
+
+            ray r(origin, lower_left_corner + u * horizontal + v * vertical);
+
+            vec3 col = color(r);
             int ir = int(255.99 * col[0]);
             int ig = int(255.99 * col[1]);
             int ib = int(255.99 * col[2]);
 
-            cout << *pptr << " ";
-
-            *pptr++ = ir; // (i ^ j) >> 2;  /* red */
-            *pptr++ = ig; // (i ^ j) >> 1;  /* green */
-            *pptr++ = ib; // (i ^ j);       /* blue */
+            *pptr++ = ir;    /* red */
+            *pptr++ = ig;    /* green */
+            *pptr++ = ib;    /* blue */
         }
     }
+
+    // Display final results
     glutMainLoop();
     return 0;
 }
+
+//int main(int argc, char** argv)
+//{
+//    ofstream imgFile;
+//    imgFile.open("test.ppm");
+//
+//    vec3 lower_left_corner(-2.0, -1.0, -1.0);
+//    vec3 horizontal(4.0, 0.0, 0.0);
+//    vec3 vertical(0.0, 2.0, 0.0);
+//    vec3 origin(0.0, 0.0, 0.0);
+//
+//    imgFile << "P3\n" << SIZEX << " " << SIZEY << "\n255\n";
+//    for (int j = SIZEY - 1; j >= 0; j--) {
+//        for (int i = 0; i < SIZEX; i++) {
+//                
+//            float u = float(i) / float(SIZEX);
+//            float v = float(j) / float(SIZEY);
+//
+//            ray r(origin, lower_left_corner + u * horizontal + v * vertical);
+//
+//            vec3 col = color(r);
+//
+//            int ir = int(255.99 * col[0]);
+//            int ig = int(255.99 * col[1]);
+//            int ib = int(255.99 * col[2]);
+//
+//            imgFile << ir << " " << ig << " " << ib << "\n";
+//        }
+//    }
+//
+//    return 0;
+//
+//}

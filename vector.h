@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VECTORH
+#define VECTORH
+
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
@@ -22,7 +24,7 @@ public:
 	inline vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
 	inline float operator[](int i) const { return e[i]; }
 	inline float& operator[](int i) { return e[i]; }
-
+		
 	inline vec3& operator+=(const vec3& v2);
 	inline vec3& operator-=(const vec3& v2);
 	inline vec3& operator*=(const vec3& v2);
@@ -42,3 +44,16 @@ public:
 
 	float e[4];	// 4 for (x, y, z, w). Even though we won't use w--it plays nicer with GPU
 };
+
+extern inline vec3 operator+(const vec3& v1, const vec3& v2);
+extern inline vec3 operator-(const vec3& v1, const vec3& v2);
+extern inline vec3 operator*(const vec3& v1, const vec3& v2);
+extern inline vec3 operator/(const vec3& v1, const vec3& v2);
+extern inline vec3 operator*(float t, const vec3& v);
+extern inline vec3 operator/(const vec3& v, float t);
+extern inline vec3 operator*(const vec3& v, float t);
+extern inline float dot(const vec3& v1, const vec3& v2);
+extern inline vec3 cross(const vec3& v1, const vec3& v2);
+extern inline vec3 unit_vector(vec3 v);
+
+#endif

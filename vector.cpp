@@ -1,4 +1,7 @@
 #include "vector.h"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 std::istream& operator>>(std::istream& is, vec3& t) {
 	is >> t.e[0] >> t.e[1] >> t.e[2];
@@ -38,7 +41,7 @@ inline vec3 operator*(float t, const vec3& v) {
 }
 
 inline vec3 operator/(const vec3& v, float t) {
-	return vec3(t/v.e[0], t/v.e[1], t/v.e[2]);
+	return vec3(v.e[0]/t, v.e[1]/t, v.e[2]/t);
 }
 
 inline vec3 operator*(const vec3& v, float t) {
@@ -98,7 +101,6 @@ inline vec3& vec3::operator*=(const float t)
 
 inline vec3& vec3::operator/=(const float t)
 {
-	// TODO: insert return statement here
 	e[0] /= t;
 	e[1] /= t;
 	e[2] /= t;
@@ -106,5 +108,5 @@ inline vec3& vec3::operator/=(const float t)
 }
 
 inline vec3 unit_vector(vec3 v) {
-	return v / v.length();
+	return (v / v.length());
 }
