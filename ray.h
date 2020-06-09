@@ -2,6 +2,7 @@
 #define RAYH
 
 #include "vector.h"
+#include "sphere.h"
 
 class ray
 {
@@ -17,6 +18,6 @@ public:
 };
 
 // Color function
-vec3 color(const ray& r);
+vec3 color(const ray& r, const Sphere* s);
 
 #endif

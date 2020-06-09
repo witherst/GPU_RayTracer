@@ -18,6 +18,12 @@ public:
 	inline float g() const { return e[2]; }
 	inline float b() const { return e[3]; }
 
+	// Setters
+	inline void setX(float x) { e[0] = x; }
+	inline void setY(float y) { e[1] = y; }
+	inline void setZ(float z) { e[2] = z; }
+	inline void setP(float x, float y, float z) { e[0] = x; e[1] = y; e[2] = z; }
+
 	friend std::istream& operator>>(std::istream& is, vec3& t);
 	friend std::ostream& operator<<(std::ostream& os, const vec3& t);
 	inline const vec3& operator+() const { return *this; }
