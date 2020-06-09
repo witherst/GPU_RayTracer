@@ -5,33 +5,45 @@
 using std::cout;
 using std::endl;
 
-bool hit_sphere(const vec3& center, float radius, const ray& r) {
-	vec3 oc = r.origin() - center;
-	float a = dot(r.direction(), r.direction());
-	float b = 2.0 * dot(oc, r.direction());
-	float c = dot(oc, oc) - radius * radius;
-	float discriminant = b * b - 4 * a * c;
-	
-	return(discriminant > 0);
-}
+//bool hit_sphere(const ray& r, const Sphere* s) {
+//	vec3 oc = r.origin() - s->getP();
+//	float a = dot(r.direction(), r.direction());
+//	float b = 2.0 * dot(oc, r.direction());
+//	float c = dot(oc, oc) - s->getRadius() * s->getRadius();
+//	float discriminant = b * b - 4 * a * c;
+//	
+//	return(discriminant > 0);
+//}
 
+/*
+Explanation of the below sphere intersection equation: 
+	https://www.youtube.com/watch?v=HFPlKQGChpE
+*/
 bool hit_sphere(const ray& r, const Sphere* s) {
-	vec3 oc = r.origin() - s->getP();
-	float a = dot(r.direction(), r.direction());
-	float b = 2.0 * dot(oc, r.direction());
-	float c = dot(oc, oc) - s->getRadius() * s->getRadius();
-	float discriminant = b * b - 4 * a * c;
-	
-	return(discriminant > 0);
+	float t = dot((s->getP() - r.origin()), r.direction());
+
+	// Check negative t, if so, ray missed the sphere
+	if (t < 0) {
+		return false;
+	}
+	vec3 p = s->getP() - r.point_at_parameter(t);
+	float y = p.length();
+
+	// Check if y is bigger than radius, ray missed
+	if (y > s->getRadius()) {
+		return false;
+	}
+
+	float x = sqrtf((s->getRadius() * s->getRadius()) - (y * y));
+
+	float t1 = t - x;	// Intersection 1
+	float t2 = t + x;	// Intersection 2
+	return (t1 > 0 && t2 > 0);
 }
 
 vec3 color(const ray& r, const Sphere* s) {
 
-	// Make red sphere
-//	if (hit_sphere(vec3(0, 0, -1), .5, r)) {
-//		return vec3(1, 0, 0);
-//	}
-
+	// Check for sphere intersection and return color of the sphere
 	if (hit_sphere(r,s)) {
 		return s[0].getColor();
 	}
