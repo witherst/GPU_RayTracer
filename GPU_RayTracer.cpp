@@ -10,9 +10,11 @@
 #include <iostream>
 #include <fstream>
 #include <GL/glut.h>
+#include <float.h>
 #include "vector.h"
 #include "ray.h"
 #include "sphere.h"
+#include "hitableList.h"
 
 using std::cout;
 using std::cin;
@@ -54,11 +56,13 @@ int main(int argc, char** argv)
     vec3 vertical(0.0, 2.0, 0.0);
     vec3 origin(0.0, 0.0, 0.0);
 
-    // Define spheres to be drawn
-    Sphere *spheres = new Sphere[1];
-    spheres[0].setP(0, 0, -1);
-    spheres[0].setRadius(.5);
-    spheres[0].setColor(1, 0, 0);
+    // Define objects (spheres for now) to be drawn
+    Hitable* list[2];
+    list[0] = new Sphere(vec3(0, 0, -1), .5);
+    list[1] = new Sphere(vec3(0, -100.5, -1), 100); // "Ground plane" for now
+
+    // Add objects to the "world" we're drawing
+    Hitable* world = new HitableList(list, 2);
 
     // OpenMP performance vars
     double startTime, endTime;
@@ -80,7 +84,7 @@ int main(int argc, char** argv)
 
                 ray r(origin, lower_left_corner + u * horizontal + v * vertical);
 
-                vec3 col = color(r, spheres);
+                vec3 col = color(r, world);
                 int ir = int(255.99 * col[0]);
                 int ig = int(255.99 * col[1]);
                 int ib = int(255.99 * col[2]);

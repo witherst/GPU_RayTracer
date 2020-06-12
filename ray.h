@@ -2,10 +2,7 @@
 #define RAYH
 
 #include "vector.h"
-#include "sphere.h"
-
-class ray
-{
+class ray {
 public:
 	ray() {};
 	ray(const vec3& a, const vec3& b) { A = a; B = b; }
@@ -18,6 +15,7 @@ public:
 };
 
 // Color function
-vec3 color(const ray& r, const Sphere* s);
+class Hitable;		// Forward declaration of class, can't include "hitable.h" or we get a circular dependency
+vec3 color(const ray& r, Hitable* world);
 
 #endif

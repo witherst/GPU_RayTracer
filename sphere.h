@@ -2,15 +2,13 @@
 #define SPHEREH
 
 #include "vector.h"
+#include "hitable.h"
 
-class Sphere{
+class Sphere : public Hitable{
 public:
 	Sphere() {};
-	Sphere(float e0, float e1, float e2, float r) {
-		p.setP(e0, e1, e2); 
-		radius = r;
-		color = vec3(1, 0, 0);
-	};
+	Sphere(vec3 cen, float r) : p(cen), radius(r) {};
+	virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;	
 
 	// Getters
 	inline float x() const { return p.x(); }
@@ -31,4 +29,6 @@ private:
 	vec3 p;		// Center of sphere: (x, y, z,)
 	float radius;
 };
+
+
 #endif
