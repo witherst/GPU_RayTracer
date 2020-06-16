@@ -1,7 +1,12 @@
 #include "vector.h"
+#include <stdlib.h>
 #include <iostream>
 using std::cout;
 using std::endl;
+
+float rand_num() {
+	return (float)rand() / (RAND_MAX);
+}
 
 std::istream& operator>>(std::istream& is, vec3& t) {
 	is >> t.e[0] >> t.e[1] >> t.e[2];
@@ -110,4 +115,13 @@ inline vec3& vec3::operator/=(const float t)
 
 inline vec3 unit_vector(vec3 v) {
 	return (v / v.length());
+}
+
+inline vec3 random_in_unit_sphere()
+{
+	vec3 p;
+	do {
+		p = 2.0 * vec3(rand_num(), rand_num(), rand_num()) * vec3(1.0, 1.0, 1.0);
+	} while (p.squared_length() >= 1.0);
+	return p;
 }

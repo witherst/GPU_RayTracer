@@ -90,7 +90,7 @@ int main(int argc, char** argv)
                 // Anti-aliasing image (avg samples from surrounding NS # of pixels to produce this 1 pixel color)
                 vec3 col(0.0, 0.0, 0.0);
                 for (int s = 0; s < NS; s++) {
-                    float rand_num = (float)rand() / (RAND_MAX);
+                    float rand_num = (float)rand() / (RAND_MAX);    // Random between 0.0 and 1.0
                     float u = float(i + rand_num) / float(SIZEX);
                     float v = float(j + rand_num) / float(SIZEY);
                     
@@ -99,6 +99,7 @@ int main(int argc, char** argv)
                 }
 
                 col = col / float(NS);
+                col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));   // Gamma corrected color
 
                 int ir = int(255.99 * col[0]);
                 int ig = int(255.99 * col[1]);

@@ -61,5 +61,6 @@ extern inline vec3 operator*(const vec3& v, float t);
 extern inline float dot(const vec3& v1, const vec3& v2);
 extern inline vec3 cross(const vec3& v1, const vec3& v2);
 extern inline vec3 unit_vector(vec3 v);
+extern inline vec3 random_in_unit_sphere();
 
 #endif
