@@ -5,6 +5,9 @@
 bool Sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
 	vec3 oc = r.origin() - p;
 
+	// Assign material
+	rec.mat_ptr = this->mat;
+
 	// Setup discriminant values from the quadratic equation (this way is unbelievably faster than other ways I've found on youtube)
 	float a = dot(r.direction(), r.direction());
 	float b = 2.0 * dot(oc, r.direction());

@@ -16,6 +16,6 @@ public:
 
 // Color function
 class Hitable;		// Forward declaration of class, can't include "hitable.h" or we get a circular dependency
-vec3 color(const ray& r, Hitable* world);
+vec3 color(const ray& r, Hitable* world, int depth);
 
 #endif

@@ -3,11 +3,13 @@
 
 #include "vector.h"
 #include "hitable.h"
+#include "material.h"
 
 class Sphere : public Hitable{
 public:
 	Sphere() {};
-	Sphere(vec3 cen, float r) : p(cen), radius(r) {};
+//	Sphere(vec3 cen, float r) : p(cen), radius(r) {};
+	Sphere(vec3 cen, float r, Material* mat) : p(cen), radius(r), mat(mat) {};
 	virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;	
 
 	// Getters
@@ -28,6 +30,7 @@ private:
 	vec3 color;
 	vec3 p;		// Center of sphere: (x, y, z,)
 	float radius;
+	Material* mat;
 };
 
 

@@ -4,7 +4,7 @@
 // OMP for performance tests
 #pragma omp
 #include <omp.h>
-#define PERF 0
+#define PERF 1
 
 // Regular include files
 #include <iostream>
@@ -18,6 +18,7 @@
 #include "sphere.h"
 #include "hitableList.h"
 #include "camera.h"
+#include "material.h"
 
 using std::cout;
 using std::cin;
@@ -64,19 +65,20 @@ int main(int argc, char** argv)
     Camera cam = Camera();
 
     // Define objects (spheres for now) to be drawn
-    Hitable* list[2];
-    list[0] = new Sphere(vec3(0, 0, -1), .5);
-    list[1] = new Sphere(vec3(0, -100.5, -1), 100); // "Ground plane" for now
+    Hitable* list[4];
+    list[0] = new Sphere(vec3(0, 0, -1), .5, new Lambert(vec3(.8, .3, .3)));
+    list[1] = new Sphere(vec3(0, -100.5, -1), 100, new Lambert(vec3(.8, .8, .0))); // "Ground plane" for now 
+    list[2] = new Sphere(vec3(1, 0, -1), .5, new Metal(vec3(.8, .6, .2), 0.0f));
+    list[3] = new Sphere(vec3(-1, 0, -1), .5, new Metal(vec3(.8, .8, .8), 1.0f));
 
     // Add objects to the "world" we're drawing
-    Hitable* world = new HitableList(list, 2);
+    Hitable* world = new HitableList(list, 4);
 
     // OpenMP performance vars
     double startTime, endTime;
     int numloops = 1;
     if (PERF) { 
         startTime = omp_get_wtime();
-        numloops = 100;
     } 
     
     for (int k = 0; k < numloops; k++) {
@@ -95,7 +97,7 @@ int main(int argc, char** argv)
                     float v = float(j + rand_num) / float(SIZEY);
                     
                     ray r = cam.get_ray(u, v);
-                    col = col + color(r, world);
+                    col = col + color(r, world, 0);
                 }
 
                 col = col / float(NS);
@@ -114,7 +116,7 @@ int main(int argc, char** argv)
     if (PERF) {
         endTime = omp_get_wtime();
 //        cout << "Performance: " << (double)numloops / (endTime - startTime) / 1000000.;
-        cout << "Performance: " << (endTime - startTime);
+        cout << "Time to render one image: " << (endTime - startTime) << " seconds.";
     }
 
 

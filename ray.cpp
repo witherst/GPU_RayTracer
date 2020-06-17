@@ -3,21 +3,26 @@
 #include "ray.h"
 #include "sphere.h"
 #include "hitable.h"
+#include "material.h"
 
 using std::cout;
 using std::endl;
 
-vec3 color(const ray& r, Hitable *world) {
+vec3 color(const ray& r, Hitable *world, int depth) {
 
 	hit_record rec;
 
 	// Check for intersection with any object in the world 
 	if (world->hit(r, 0.001, FLT_MAX, rec)) {
-		// Using the hitpoint p, we create a random ray that goes OUTWARDS from the hitpoint
-		vec3 target = rec.p + rec.N + random_in_unit_sphere();
+		ray scattered;
+		vec3 attenuation;
 
-		// Now we're sending a new ray out from p (the original hit point, which is the new origin)
-		return .5 * color(ray(rec.p, target-rec.p), world);
+		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+			return attenuation * color(scattered, world, depth + 1);
+		}
+		else {
+			return vec3(0, 0, 0);
+		}	
 	}
 	else {
 		// Color background the faded blue to white
